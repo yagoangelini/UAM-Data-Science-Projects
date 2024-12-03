@@ -1,0 +1,261 @@
+//====================================================ABAIXO CLASSE MAIN==============================================================
+
+
+public class Main {
+    public static void main(String[] args) {
+        Metodos m = new Metodos();
+
+        m.inserirFuncionario("Yago", "Designer Gráfico", 10000f);
+        m.inserirFuncionario("Ana", "Vendedora", 15000f);
+        m.inserirFuncionario("Marco", "MOS Master", 18000f);
+        m.inserirFuncionario("Um", "MOS Master", 18000f);
+        m.inserirFuncionario("Dois", "MOS Master", 18000f);
+
+        System.out.println("RESULTADO DA PESQUISA\n\n" + m.buscarFuncionario(6) + "\n=====================\n");
+        m.removerFuncionario(6);
+
+        m.inserirFuncionario("Três", "MOS Master", 18000f);
+        
+        m.exibirFuncionarios();
+    }
+}
+
+
+//====================================================ABAIXO CLASSE ELEMENTO==============================================================
+
+
+public class Elemento {
+    private Elemento ant, prox;
+    private Funcionario func;
+
+    public Elemento(Elemento ant, Elemento prox, Funcionario func){
+        this.ant = ant;
+        this.prox = prox;
+        this.func = func;
+    }
+
+    public Elemento getAnt(){return this.ant;}
+
+    public void setAnt(Elemento ant){this.ant = ant;}
+
+    public Elemento getProx(){return this.prox;}
+
+    public void setProx(Elemento prox){this.prox = prox;}
+
+    public Funcionario getFuncionario(){return this.func;}
+
+    public void setFuncionario(Funcionario func){this.func = func;}
+
+    public String toString(){
+        return func.toString();
+    }
+
+}
+
+
+//====================================================ABAIXO CLASSE FUNCIONARIO==============================================================
+
+
+public class Funcionario {
+    private String nomeFuncionario, cargo;
+    private int matricula;
+    private float salario;
+
+    public Funcionario(String nomeFuncionario, String cargo, float salario){
+        int indice = Matricula.retornaIndiceMatricula();
+        this.matricula = Matricula.buscarMatriculaPorIndice(indice);
+        Matricula.removerMatriculaPorIndice(indice);
+        this.nomeFuncionario = nomeFuncionario;
+        this.cargo = cargo;
+        this.salario = salario;
+    }
+
+    public int getMatricula(){
+        return this.matricula;
+    }
+
+    public String toString(){
+        return String.format("%04d | ", matricula) + "Nome: " + nomeFuncionario +
+               "\nCargo: " + cargo +
+               "\nSalário: R$" + String.format("%.2f", salario) + "\n";
+    }
+}
+
+
+//====================================================ABAIXO CLASSE MATRICULA==============================================================
+
+
+import java.util.Random;
+import java.util.ArrayList;
+import java.util.Collections;
+
+public class Matricula {
+    private static ArrayList<Integer> matriculas = preencherMatriculas();
+    private static Random gerador = new Random();
+    private static int rnd;
+    
+    public static ArrayList<Integer> getMatriculas(){return matriculas;}
+
+    /**
+     * Preenche a lista de matrículas com uma sequência aleatória de números únicos de 1 a 1000.
+     * 
+     * @return Uma lista embaralhada aleatoriamente com números de 1 a 1000.
+     */
+    private static ArrayList<Integer> preencherMatriculas(){
+        matriculas = new ArrayList<>();
+        for(int i=1; i<=1000; i++){
+            matriculas.add(i);
+        }
+        Collections.shuffle(matriculas);
+        return matriculas;
+    }
+
+    /**
+     * Gera um número inteiro aleatório dentro dos limites de tamanho da lista que referenciará a matrícula do funcionário.
+     * 
+     * @return O índice da matrícula do Funcionário.
+     */
+    public static int retornaIndiceMatricula(){
+        rnd = gerador.nextInt(matriculas.size()); //Aramazena o índice de 0 a 999
+        return rnd;
+    }
+
+    /**
+     * Ao remover um funcionário, ele devolve sua matrícula e ela fica novamente disponível para uso.
+     * Após fazer a devolução, a lista é embaralhada novamente.
+     * 
+     * @param matricula int
+     */
+    public static void devolverMatricula(int matricula){
+        matriculas.add(matricula);
+        Collections.shuffle(matriculas);
+    }
+
+    /**
+     * Recebe o índice gerado e retorna a matrícula que está no índice.
+     * 
+     * @param indice int
+     * 
+     * @return A matrícula contida no índice da lista, especificado por parâmetro.
+     */
+    public static int buscarMatriculaPorIndice(int indice){
+        return matriculas.get(indice);
+    }
+
+    /**
+     * Remove a matrícula contida no índice especificado por parâmetro.
+     * Usada principalemte para remover a matrícula da lista após ser concedida a um funcionário.
+     * 
+     * @param matricula int
+     */
+    public static void removerMatriculaPorIndice(int matricula){
+        matriculas.remove(matricula);
+    }
+}
+
+
+//====================================================ABAIXO CLASSE METODOS==============================================================
+
+
+public class Metodos {
+    private Elemento inicio=null, atual;
+    private int quantidadeFuncionarios=0;
+    private int cont=0;
+    //Criação de uma constante que guardará o tamanho da lista de matrículas.
+    final int MAX_MATRICULAS = Matricula.getMatriculas().size();
+
+    /**
+     * Cria um novo funcionário com os parâmetros passados e insere ele em um novo Elemento.
+     * Possui diferentes instruções para a inserção do primeiro Elemento.
+     * 
+     * @param nomeFuncionario String
+     * @param cargo String
+     * @param salario float
+     */
+    public void inserirFuncionario(String nomeFuncionario, String cargo, float salario){
+        if(Matricula.getMatriculas().size() > 0){
+            if(quantidadeFuncionarios==0){
+                Elemento novoElemento = new Elemento(null, null, new Funcionario(nomeFuncionario, cargo, salario));
+                inicio = novoElemento;
+                atual = novoElemento;
+                quantidadeFuncionarios++;
+            }else{
+                Elemento novoElemento = new Elemento(atual, null, new Funcionario(nomeFuncionario, cargo, salario));
+                atual.setProx(novoElemento);
+                atual = novoElemento;
+                quantidadeFuncionarios++;
+            }
+        }else if(cont==0){
+            System.out.println("╳ Número máximo de matrículas: " + MAX_MATRICULAS + " ╳\n");
+            cont++;
+        }
+    }
+
+    /**
+     * Exibe um relatório detalhado sobre todos os Funcionários da Lista Duplamente Encadeada.
+     */
+    public void exibirFuncionarios(){
+        Elemento exibe = inicio;
+        while(exibe != null){
+            System.out.println(exibe);
+            exibe = exibe.getProx();
+        }
+    }
+
+    /**
+     * Busca na Lista um Funcionário por matrícula.
+     * 
+     * @param matricula int
+     * @return Caso encontre, retorna o Elemento que o Funcionário está inserido, caso contrário, retorna null.
+     */
+    public Elemento buscarFuncionario(int matricula){
+        Elemento pesq = inicio;
+        while(pesq != null){
+            if(pesq.getFuncionario().getMatricula() == matricula)
+                return pesq;
+            pesq = pesq.getProx();
+        }
+        return null;
+    }
+
+    /**
+     * Remove por matrícula um funcionário da Lista com a ajuda do método de buscarFuncionario(int matricula).
+     * Possui instruções diferentes se:
+     * 1) Houver somente 1 funcionário na lista
+     * 2) Se o Funcionário a ser removido for o primeiro
+     * 3) Se o Funcionário a ser removido for o último
+     * 4) Se o funcionário a ser removido estiver em uma outra posição qualquer.
+     * 
+     * Após a remoção, a quantidade de Funcionários é decrementada.
+     * 
+     * @param matricula int
+     * 
+     * @return true se a remoção for bem sucedida, false em caso contrário.
+     */
+    public boolean removerFuncionario(int matricula){
+        Elemento remove = buscarFuncionario(matricula);
+        
+        if(remove!=null){
+            if(quantidadeFuncionarios==1){
+                inicio = null;
+                atual = null;
+            }else if(remove == inicio){
+                inicio = inicio.getProx();
+                inicio.setAnt(null);
+                remove.setProx(null);
+            }else if(remove == atual){
+                atual = atual.getAnt();
+                atual.setProx(null);
+                remove.setAnt(null);
+            }else{
+                remove.getAnt().setProx(remove.getProx());
+                remove.getProx().setAnt(remove.getAnt());
+            }
+            Matricula.devolverMatricula(matricula);
+            quantidadeFuncionarios--;
+            return true;
+        }
+        return false;
+    }
+}
+

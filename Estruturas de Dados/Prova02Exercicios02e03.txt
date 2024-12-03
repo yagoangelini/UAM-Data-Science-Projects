@@ -1,0 +1,138 @@
+=============+
+EXERCÍCIO 02 |
+=============+
+
+CLASSE METODOS====================
+
+public class Metodos {
+
+    private Elemento inicio = null, atual, aux;
+    private int quantidadeElementos = 0;
+
+    public void inserir(Object info) {
+        if (inicio == null) {
+            Elemento novoElemento = new Elemento(null, null, info);
+            inicio = novoElemento;
+            aux = inicio;
+            quantidadeElementos++;
+        } else {
+            Elemento novoElemento = new Elemento(aux, null, info);
+            atual = novoElemento;
+            aux.setProx(atual);
+            aux = atual;
+            quantidadeElementos++;
+        }
+    }
+
+    public void exibir() {
+        Elemento exibe = atual;
+        while (exibe != null) {
+            System.out.println(exibe.getInfo());
+            exibe = exibe.getAnt();
+        }
+    }
+
+    public Elemento pesquisar(Object info) {
+        Elemento pesq = inicio;
+        while (pesq != null) {
+            if (pesq.getInfo() == info) {
+                return pesq;
+            }
+            pesq = pesq.getProx();
+        }
+        return null;
+    }
+
+    public boolean remover(Object info) {
+        Elemento rem = pesquisar(info);
+        if (rem != null) {
+            //Remoção do primeiro elemento
+            if (rem == inicio) {
+                inicio = rem.getProx();
+                rem.setProx(null);
+                inicio.setAnt(null);
+            } else if (rem == atual) {//Remoção do último elemento
+                atual = rem.getAnt();
+                atual.setProx(null);
+                rem.setAnt(null);
+            } else {//Remoção de um elemento qualquer
+                rem.getAnt().setProx(rem.getProx());
+                rem.getProx().setAnt(rem.getAnt());
+            }
+            quantidadeElementos--;
+            return true;
+        }
+        return false;
+    }
+
+    public Elemento retornaMaiorValor(){
+        Elemento auxiliar = atual, maiorValor = atual;
+        while(auxiliar!=null){
+            if((int)maiorValor.getInfo() < (int)auxiliar.getInfo()){
+                maiorValor = auxiliar;
+            }
+            auxiliar = auxiliar.getAnt();
+        }
+        return maiorValor;
+    }
+}
+
+
+CLASSE TESTARLISTADUPLA====================
+ 
+public class TestarListaDupla {
+ 
+    public static void main(String[] args) {
+         Metodos metodo=new Metodos();
+         
+         metodo.inserir(3);
+         metodo.inserir(5);
+         metodo.inserir(11);
+         metodo.inserir(-17);
+         metodo.inserir(90);
+         metodo.inserir(0);
+
+         System.out.println(metodo.retornaMaiorValor().getInfo());
+          
+    }
+    
+}
+
+
+
+=============+
+EXERCÍCIO 03 |
+=============+
+
+import java.util.Random;
+
+public class Main {
+    public static void main(String[] args) {
+        int[] numeros = new int[100];
+
+        System.out.println("Média: " + preencheERetornaMedia(numeros) + "\n");
+
+        exibeArray(numeros);
+    }
+
+    public static float preencheERetornaMedia(int[] numeros){
+        
+        Random gerador = new Random();
+        float soma=0;
+
+        for(int i=0; i<numeros.length; i++){
+            numeros[i] = gerador.nextInt(1000) + 1;
+            soma += numeros[i];
+        }
+
+        return (soma/numeros.length);
+    }
+
+    public static void exibeArray(int[] numeros){
+        System.out.println("ARRAY");
+        for(int i=0; i<numeros.length; i++){
+            System.out.println(" numeros[" + i + "] = " + numeros[i]);
+        }
+    }
+}
+

@@ -1,0 +1,255 @@
+//Aluno: Yago Angelini Candido
+
+//==========================================EXERCÍCIO 01 ABAIXO==============================================================
+
+import java.util.Random;
+
+public class Exercicio01 {
+
+    public static void main(String[] args) {
+        int[] ale = new int[100];
+        Random gerador = new Random();
+        int cont=0, soma=0;
+    
+        for(int i=0; i<ale.length; i++){
+            ale[i] = gerador.nextInt(200) + 1;
+            if((ale[i] % 2) == 0){
+                soma += ale[i];
+                cont++;
+            }
+        }
+    
+        System.out.printf("A média é: %.2f\n\n", (float) soma/cont);
+    }
+}
+
+
+//==========================================EXERCÍCIO 02 ABAIXO==============================================================
+
+
+import java.util.Random;
+
+public class Exercicio02 {
+    public static void main(String[] args) {
+        float[][] matriz = new float[10][10];
+        Random rd = new Random();
+        int inicio = 1;
+        int fim = 11;
+        float[] diagonalPrimaria = new float[10];
+        int i=0, j=0;
+
+
+        for(i=0; i<matriz.length; i++){
+            for(j=0; j<matriz[i].length; j++){
+                matriz[i][j] = inicio + rd.nextFloat() * (fim-inicio);
+
+                if(i==j){
+                    diagonalPrimaria[i] = matriz[i][j];
+                }
+            }
+        }
+
+        System.out.println("Elementos da matriz:");
+        System.out.print("┌───────────────────────────────────────────────────────────────────────────────┐\n");
+        for(i=0; i<matriz.length; i++){
+            System.out.print("| ");
+            for(j=0; j<matriz[i].length; j++){
+                System.out.printf("%05.2f | ", matriz[i][j]);
+            }
+            System.out.print("\n");
+        }
+        System.out.println("└───────────────────────────────────────────────────────────────────────────────┘");
+
+
+        System.out.println("\nDiagonal primária:");
+        System.out.print("┌───────────────────────────────────────────────────────────┐\n ");
+        for(i=0; i<diagonalPrimaria.length; i++){
+            System.out.printf("%05.2f\n", diagonalPrimaria[i]);
+            if(i!=diagonalPrimaria.length - 1){
+                for(j=0;j<=i;j++){
+                    System.out.print("      ");
+                }
+            }
+        }
+        System.out.println("└───────────────────────────────────────────────────────────┘");
+    }
+}
+
+
+//==========================================EXERCÍCIO 03 ABAIXO==============================================================
+
+//================================CLASSE PRODUTO==================================
+ 
+public class Produto {
+    private String nome;
+    private int codigo;
+    private float preco;
+
+    public Produto(){
+
+    }
+
+    public Produto(int codigo, String nome, float preco) {
+        this.codigo = codigo;
+        this.nome = nome;
+        this.preco = preco;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public int getCodigo(){
+        return codigo;
+    }
+
+    public void setCodigo(int codigo){
+        this.codigo = codigo;
+    }
+
+    public float getPreco(){
+        return preco;
+    }
+
+    public void setPreco(float preco){
+        this.preco = preco;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%02d | ", codigo) + nome +
+               "\nPreço = R$" + preco;
+    }
+}
+
+//================================CLASSE METODOS==================================
+ 
+public class Metodos {
+  Elemento atual = null;
+  static int quantidade = 0;
+  
+  public void inserirElemento(Object info){
+    Elemento novoElemento = new Elemento(atual, info);
+    this.atual = novoElemento; 
+    quantidade++;
+  }
+   
+  public void exibir(){
+    Elemento exibe = this.atual;
+    while(exibe != null){
+        System.out.println(exibe.getInfo());
+        exibe = exibe.getAnt();//Passa o endereço do elemento anteiror
+    }
+  }
+  
+  public Produto pesquisar(int codigo){
+    Elemento pesq = this.atual;
+    Produto p;
+    while(pesq != null){
+     p = (Produto) pesq.getInfo(); //Casting   
+     if(p.getCodigo() == codigo){
+       return p;
+     }
+     pesq = pesq.getAnt();
+    }
+    return null;
+  }
+  /**
+   * Localizar um elemento na lista simplesmente encadeada para remover.
+   * @param info Object
+   * @return Elemento[]
+   */
+  private Elemento[] encontrarRemove(Object info){
+   Elemento pesq=this.atual, auxPesq = null;
+   Elemento[] vet = new Elemento[2];
+   while(pesq!=null){
+     if(pesq.getInfo().equals(info)){
+         vet[0] = pesq;//É o elemento a ser removido.
+         vet[1] = auxPesq;//É o elemento que está antes.
+         return vet;
+     }
+     auxPesq = pesq;
+     pesq = pesq.getAnt();
+    }
+   return null;
+  }
+  
+  
+  public boolean remove(Object info){
+      Elemento rem=encontrarRemove(info)[0];
+      Elemento auxRem=encontrarRemove(info)[1];
+      //Caso 1
+      if(rem == this.atual){
+        this.atual = rem.getAnt();//Vá para o anterior
+        rem.setAnt(null);
+        //Caso 2
+      }else if(rem.getAnt() == null){
+         auxRem.setAnt(null);
+       //Caso 3
+      }else{
+         auxRem.setAnt(rem.getAnt());
+         rem.setAnt(null);
+      }
+      return true;
+  }
+
+  public void calcularTotal(){
+    float total=0;
+    Elemento aux = this.atual;
+
+    while(aux != null){
+      Produto p = (Produto) aux.getInfo();
+
+      total += p.getPreco();
+
+      aux = aux.getAnt();
+    }
+
+    System.out.printf("O total dos produtos da lista é: R$%.2f\n\n", total);
+    
+  }
+}
+
+
+//================================CLASSE TESTELISTASIMPLES==================================
+ 
+public class TesteListaSimples {
+
+    
+    public static void main(String[] args) {
+         Metodos metodo=new Metodos();
+         
+         Produto produto1 = new Produto(1, "Smartphone X", 1099.99f);
+         Produto produto2 = new Produto(2, "TV Tela Plana", 2568.98f);
+         Produto produto3 = new Produto(3, "Bolacha Trakinas", 3.99f);
+         Produto produto4 = new Produto(4, "Chocolate CacauShow", 52.62f);
+         Produto produto5 = new Produto(5, "KinderOvo", 6.50f);
+         Produto produto6 = new Produto(6, "Salgadinho ElmaChips", 8.30f);
+         
+         metodo.inserirElemento(produto1);
+         metodo.inserirElemento(produto2);
+         metodo.inserirElemento(produto3);
+         metodo.inserirElemento(produto4);
+         metodo.inserirElemento(produto5);
+         metodo.inserirElemento(produto6);
+         
+        metodo.exibir();
+        System.out.println();
+         
+        int codigo=1;
+        System.out.println("PESQUISA:\n" + metodo.pesquisar(codigo) + "\n");
+
+        //metodo.remove(produto2);
+         
+        metodo.exibir();
+        System.out.println();
+
+        metodo.calcularTotal();
+         
+    }
+    
+}

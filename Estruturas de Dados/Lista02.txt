@@ -1,0 +1,231 @@
+/*
+Nome: LISTA 02 - MARKETPLACE
+Autor: Yago Angelini Candido
+Versão: 1.0
+Data: 29/04/2021
+*/
+import java.util.Scanner;
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        String nomeProduto, categoriaProduto;
+        float precoProduto;
+        char resp='N', op='6';
+
+        do{
+            System.out.println("====SISTEMA MARKETPLACE====");
+            System.out.println("1 - Inserir produto");
+            System.out.println("2 - Remover produto");
+            System.out.println("3 - Pesquisar produto");
+            System.out.println("4 - Exibir produtos");
+            System.out.println("5 - Exibir total");
+            System.out.println("0 - Sair\n");
+
+            System.out.print("Informe o código: ");
+            op = sc.nextLine().charAt(0);
+            System.out.println();
+
+            switch(op){
+                case '1':
+                    do{
+                        System.out.println("====CADASTRO====");
+                        System.out.print("Informe o nome do produto: ");
+                        nomeProduto = sc.nextLine();
+                        System.out.print("Informe a categoria do produto: ");
+                        categoriaProduto = sc.nextLine();
+                        System.out.print("Informe o preço do produto: R$");
+                        precoProduto = sc.nextFloat();
+                        sc.nextLine();
+
+                        Metodos.inserirProduto(nomeProduto, categoriaProduto, precoProduto);
+
+                        System.out.print("\nDeseja inserir mais um produto(S ou N)? ");
+                        resp = sc.nextLine().charAt(0);
+                        System.out.println();
+                    }while(resp == 's' || resp == 'S');
+                    break;
+                    
+                case '2':
+                    System.out.print("Informe o código do produto para remover: ");
+                    Metodos.removerProduto(sc.nextInt());
+                    sc.nextLine();
+                    break;
+
+                case '3':
+                    System.out.print("Informe o código do produto para pesquisar: ");
+                    Produto p = Metodos.pesquisarProduto(sc.nextInt());
+                    if(p!=null)
+                        System.out.println("\n" + p);
+                    sc.nextLine();
+                    break;
+
+                case '4':
+                    Metodos.exibirProdutos();
+                    break;
+
+                case '5':
+                    System.out.println("O total da compra realizada é: R$" + Metodos.retornaTotal() + "\n");
+                    break;
+                
+                case '0':
+                    System.out.println("\nTchau!\n");
+                    break;
+                default:
+                    System.out.println("Informe um código válido.\n");
+                    break;
+            }
+        }while(op != '0');
+        
+        sc.close();
+    }
+}
+
+
+=============================================================================================================================
+
+
+public class Metodos {
+
+    private static int quantidade=0, i=0, j=0;
+    private static float total=0;
+    private static Produto[] produtos = new Produto[1];
+
+    /**
+     * Insere um produto no array de produtos.
+     * Se necessário, aloca um array novo com 2 posições adicionais.
+     * Atualiza o total da compra e incrementa quantidade de produtos na lista.
+     * @param nomeProduto String
+     * @param categoriaProduto String
+     * @param precoProduto float
+     */
+    public static void inserirProduto(String nomeProduto, String categoriaProduto, float precoProduto){
+        produtos = alocarNovoArray(produtos);
+        System.out.println("\nTamanho atual do array: " + produtos.length);
+        produtos[i] = new Produto(nomeProduto, categoriaProduto, precoProduto, i+1);
+        total += produtos[i].getPreco();
+        i++;
+        quantidade++;
+    }
+
+    /**
+     * Remove um produto da lista com base no código recebido por parâmetro.
+     * Reorganiza os outros elementos para preencher o espaço vazio.
+     * Atualiza o total da compra e decrementa a quantidade de produtos na lista.
+     * @param code int
+     */
+    public static void removerProduto(int code){
+        Produto p = pesquisarProduto(code);
+        if(p != null){
+            total -= p.getPreco(); //Exclui o preço do produto removido do total final
+            for(j=code; j<quantidade; j++){//Preencher os espaços em branco, movendo todos os elementos posteriores uma posição para trás
+                produtos[j-1] = produtos[j]; //j-1 porque o código é i+1
+                produtos[j-1].setCodigo((produtos[j-1].getCodigo()) - 1);//Altera o código dos elementos movidos
+            }
+            produtos[j-1] = null; //Apaga a última posição, que agora é uma cópia da penúltima
+            i--; //Decrementa o i, para inserir na posição correta posteriormente
+            quantidade--; //Diminui a quantidade de inserts, pois o produto foi removido
+            System.out.println("\nProduto removido com sucesso.\n");
+        }
+    }
+
+    /**
+     * Pesquisa um produto na lista com base no código recebido por parâmetro.
+     * @param code int
+     * @return Produto (se for encontrado) ou null (se não for encontrado).
+     */
+    public static Produto pesquisarProduto(int code){
+        if(code>0 && code<=quantidade)//Valida se o código se refere a um insert válido na lista
+            return produtos[code-1];//Se sim, retorna o produto da posição do código menos um, pois o vetor começa em 0 e o código em 1
+        System.out.println("\nProduto não encontrado.\n");
+        return null;
+    }
+
+    /**
+     * Exibe os produtos da lista
+     */
+    public static void exibirProdutos(){
+        for(j=0; j<quantidade; j++){
+            System.out.println(produtos[j]);
+        }
+    }
+
+    /**
+     * Aloca um array novo se a quantidade de inserts for maior ou igual ao tamanho do array atual.
+     * O novo array contém 2 posições adicionais, e recebe uma cópia dos dados do array atual.
+     * @param produtos Produto[]
+     * @return Produto[]
+     */
+    public static Produto[] alocarNovoArray(Produto[] produtos){
+        if(quantidade >= produtos.length){
+            Produto[] produtosNovo = new Produto[quantidade+2];
+            System.arraycopy(produtos, 0, produtosNovo, 0, produtos.length);
+            return produtosNovo;
+        }
+        return produtos;
+    }
+
+    /**
+     * Retorna o total da compra
+     * @return float
+     */
+    public static float retornaTotal(){
+        return total;
+    }
+}
+
+
+=======================================================================================================================
+
+
+public class Produto {
+    private String nomeProduto, categoria;
+    private int codigo;
+    private float preco;
+
+    public Produto(String nomeProduto, String categoria, float preco, int codigo){
+        this.nomeProduto = nomeProduto;
+        this.categoria = categoria;
+        this.preco = preco;
+        this.codigo = codigo;
+    }
+
+    public String getNome(){
+        return nomeProduto;
+    }
+
+    public void setNome(String nomeProduto){
+        this.nomeProduto = nomeProduto;
+    }
+
+    public String getCategoria(){
+        return categoria;
+    }
+
+    public void setCategoria(String categoria){
+        this.categoria = categoria;
+    }
+
+    public int getCodigo(){
+        return codigo;
+    }
+
+    public void setCodigo(int codigo){
+        this.codigo = codigo;
+    }
+
+    public float getPreco(){
+        return preco;
+    }
+
+    public void setPreco(float preco){
+        this.preco = preco;
+    }
+
+    @Override
+    public String toString(){
+        return String.format("%02d | ", codigo) + nomeProduto +
+               "\nCategoria: " + categoria + 
+               "\nPreço: R$" + preco + "\n";
+    }
+}

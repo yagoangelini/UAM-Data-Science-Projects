@@ -1,0 +1,184 @@
+/*
+Nome: EXERCÍCIO 1 - Matriz aleatória multiplicada
+Autor: Yago Angelini Candido
+Versão: 1.0
+Data: 21/04/2021
+*/
+import java.util.Random;
+import java.util.Scanner;
+
+public class Exc01{
+    public static void main(String[] args) {
+        //Declaração das variáveis
+        int[][] matriz = new int[5][6];
+        Random gerador = new Random(); //Criação da instância do gerador de números aleatórios
+        Scanner sc = new Scanner(System.in); //Criação da instância do Scanner do teclado
+        int mult;
+
+        System.out.print("Informe o número multiplicador da matriz: ");
+        mult = sc.nextInt();
+        System.out.println();
+
+        //Laço para preencher a matriz com números aleatórios e imprimir os elementos
+        for(int i=0; i<matriz.length; i++){
+            for(int j=0; j<matriz[i].length; j++){
+                matriz[i][j] = gerador.nextInt() * mult; //Multiplica os elementos pelo multiplicador informado pelo usuário
+                System.out.println("(" + i + "," + j + ") | " + matriz[i][j]); //Imprime cada elemento da matriz
+            }
+        }
+
+        sc.close(); //Fecha o Scanner
+    }
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+
+/*
+Nome: EXERCÍCIO 2 - Soma dos elementos da diagonal primária da matriz
+Autor: Yago Angelini Candido
+Versão: 1.0
+Data: 21/04/2021
+*/
+import java.util.Random; //Para Random
+
+public class Exc02 {
+    public static void main(String[] args) {
+        float[][] matriz = new float[10][10];
+        Random gerador = new Random(); //Criação da instância do gerador de números aleatórios
+        float sum=0;
+
+        //Laço para preencher a matriz com números aleatórios e imprimir os elementos
+        for(int i=0; i<matriz.length; i++){
+            for(int j=0; j<matriz[i].length; j++){
+                matriz[i][j] = gerador.nextFloat(); //Preenche a variável com números aleatórios
+                System.out.println("(" + i + "," + j + ") | " + matriz[i][j]); //Imprime cada elemento da matriz
+                if(i == j)
+                    sum += matriz[i][j]; //Adiciona o elemento ao acumulador
+            }
+        }
+
+        System.out.println("\nA soma dos elementos da diagonal primária da matriz é: " + sum + "\n");
+    }
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+
+/*
+Nome: EXERCÍCIO 3 - Soma dos elementos da matriz triangular superior
+Autor: Yago Angelini Candido
+Versão: 1.0
+Data: 21/04/2021
+*/
+import java.util.Scanner;
+
+public class Exc03 {
+    public static void main(String[] args) {
+        int[][] matriz = new int[10][10];
+        Scanner sc = new Scanner(System.in);
+        
+        //Leitura dos elementos da matriz
+        System.out.println("Digite os elementos: ");
+        for(int i=0; i<matriz.length; i++){
+            for(int j=0; j<matriz[i].length; j++){
+                System.out.print("(" + i + "," + j + ") = ");
+                matriz[i][j] = sc.nextInt();
+            }
+        }
+
+        System.out.println();
+
+        //Impressão dos elementos da matriz diagonal superior
+        for(int i=0; i<matriz.length; i++){
+            for(int j=0; j<matriz[i].length; j++){
+                //Os elementos da matriz diagonal superior possuem o j maior ou igual ao i
+                if(j>=i)
+                    System.out.printf("%3d\t", matriz[i][j]);
+                else
+                    System.out.print("   \t"); //Apenas para tabulação e organização da impressão
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+        sc.close();
+    }
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+
+/*
+Nome: EXERCÍCIO 4 - Soma dos elementos da matriz triangular inferior
+Autor: Yago Angelini Candido
+Versão: 1.0
+Data: 21/04/2021
+*/
+import java.util.Scanner;
+
+public class Exc04 {
+    public static void main(String[] args) {
+        int[][] matriz = new int[10][10];
+        Scanner sc = new Scanner(System.in);
+        
+        //Leitura dos elementos da matriz
+        System.out.println("Digite os elementos: ");
+        for(int i=0; i<matriz.length; i++){
+            for(int j=0; j<matriz[i].length; j++){
+                System.out.print("(" + i + "," + j + ") = ");
+                matriz[i][j] = sc.nextInt();
+            }
+        }
+
+        System.out.println();
+
+        //Impressão dos elementos da matriz diagonal inferior
+        for(int i=0; i<matriz.length; i++){
+            for(int j=0; j<matriz[i].length; j++){
+                //Os elementos da matriz diagonal inferior possuem o j menor ou igual ao i
+                if(j<=i)
+                    System.out.printf("%3d\t", matriz[i][j]);
+                else
+                    System.out.print("   \t"); //Apenas para tabulação e organização da impressão
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+        sc.close();
+    }
+}
+
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+
+/*
+Nome: EXERCÍCIO 5 - Soma de cada linha da matriz
+Autor: Yago Angelini Candido
+Versão: 1.0
+Data: 21/04/2021
+*/
+import java.util.Random;
+
+public class Exc05 {
+    public static void main(String[] args) {
+        float[][] matriz = new float[4][3];
+        Random gerador = new Random();//Criação da instância do gerador de números aleatórios
+        float sum;
+
+        for(int i=0; i<matriz.length; i++){
+            sum = 0; //Zera o acumulador
+            for(int j=0; j<matriz[i].length; j++){
+                matriz[i][j] = gerador.nextFloat();//Preenche a variável com números aleatórios
+                System.out.println("(" + i + "," + j + ") | " + matriz[i][j]); //Imprime cada elemento da matriz
+                sum += matriz[i][j]; //Acumulador que guarda a soma dos elementos da linha
+            }
+            System.out.println("\nA soma da linha " + i + " é: " + sum + "\n"); //Imprime a soma dos elementos da linha
+        }
+    }
+}

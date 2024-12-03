@@ -1,0 +1,24 @@
+1) Olá! Qual o seu nome?
+----Yago
+
+2) Olá {nome}, como posso te ajudar?
+----Quero fazer um pedido
+
+***IMPRIME CARDÁPIO
+3) Qual o sabor?
+----1 pizza número 10 || 1 Pizza de Calabresa || Calabresa || Meia Calabresa, Meia mussarela || 1/2 Calabresa, 1/2 mussarela
+  
+4) Deseja algo mais?
+----Uma Coca-Cola de 2 litros || Número 15 || 15
+
+5) O valor total é: {calcular e imprimir NF}
+***IMPRIME LISTA DE FORMAS DE PAGAMENTO
+6) Qual a forma de pagamento?
+----Número 4 || 4 || Débito
+
+
+- Horários de funcionamento
+- Realizar pedidos
+- Ver cardápio
+- Endereço
+- Tempo/Taxa para entregar

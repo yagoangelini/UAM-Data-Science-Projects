@@ -1,0 +1,8 @@
+Para rodar o código:
+1) Importe as bibliotecas do Hadoop necessárias
+2) Configure os packages corretamente segundo a sua workspace
+3) Configure os caminhos de entrada e saída dos mapreduces no arquivo 'RealStart.java'
+4) Configure no 'RealDataMapper01.java' o caminho para o arquivo 'stop_words_english.txt'
+5) Configure no 'RealDataReducer04.java' o caminho para o arquivo 'part-r-00000', output do mapreduce 03, que calcula a quantidade de documentos
+
+6) Rode o 'RealStart.java'
